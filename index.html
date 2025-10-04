@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulário de Respostas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Respostas Formulário</h1>
+
+    <form id="respostaForm">
+      <input type="text" name="nome" placeholder="Seu nome" required>
+      <input 
+       type="number" 
+       name="idade" 
+       placeholder="Sua idade" 
+       required 
+       min="0" 
+       max="120">
+
+      <label for="alien">Selecione um membro:</label>
+      <select id="alien" name="membro_escolhido" required>
+        <option value="" disabled selected>Selecione</option>
+        <option value="Arthur">Arthur</option>
+        <option value="Arth">Arth</option>
+        <option value="Cavalu">Cavalu</option>
+        <option value="Drex">Drex</option>
+        <option value="Heki">Heki</option>
+        <option value="Francisco">Francisco</option>
+        <option value="João Garcia">João Garcia</option>
+        <option value="Mathias">Mathias</option>
+        <option value="Martins">Martins</option>
+        <option value="Nunes">Nunes</option>
+        <option value="Oliver">Oliver</option>
+        <option value="Rhavi">Rhavi</option>
+        <option value="Rhuan">Rhuan</option>
+        <option value="Salomão">Salomão</option>
+      </select>
+
+      <textarea name="melhorias" placeholder="Escreva suas sugestões ou melhorias..." required></textarea>
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <div id="mensagem"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("respostaForm");
+    const msg = document.getElementById("mensagem");
+    const API_URL = "http://localhost:3000/respostas"; 
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const dados = {
+        nome: form.nome.value,
+        idade: form.idade.value,
+        membro_escolhido: form.membro_escolhido.value,
+        melhorias: form.melhorias.value
+      };
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dados)
+        });
+
+        const data = await response.json();
+        msg.textContent = data.msg || "Resposta enviada com sucesso!";
+        msg.className = "sucesso";
+        form.reset();
+      } catch (err) {
+        msg.textContent = "Erro ao enviar resposta.";
+        msg.className = "erro";
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
